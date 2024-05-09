@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleProductApi.Data;
 using SimpleProductApi.Entities;
+using SimpleProductApi.Utilities;
 using System.Linq.Expressions;
 
 namespace SimpleProductApi.Repository
@@ -20,12 +21,21 @@ namespace SimpleProductApi.Repository
         {
             return await _dbSet.ToListAsync();
         }
-        public async Task<IEnumerable<TEntity>> GetAllAsync(int page, int pageSize)
+        public async Task<PaginationResponseModel<IEnumerable<TEntity>>> GetAllAsync(int page, int pageSize)
         {
-            return await _dbSet
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var totalCount = await _dbSet.CountAsync();
+            var dataList = await _dbSet
+                                       .Skip((page - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
+            var response = new PaginationResponseModel<IEnumerable<TEntity>>
+            {
+                Count = totalCount,
+                Data = dataList,
+                Page = page,
+                PageSize = pageSize
+            };
+            return response;
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate)

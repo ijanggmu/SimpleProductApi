@@ -1,6 +1,7 @@
 ﻿using SimpleProductApi.Models;
 using SimpleProductApi.Repository;
 using SimpleProductApi.Repository.Product;
+using SimpleProductApi.Utilities;
 
 namespace SimpleProductApi.Services.Product
 {
@@ -13,7 +14,7 @@ namespace SimpleProductApi.Services.Product
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<Entities.Product>> GetProductsAsync(int page, int pageSize)
+        public async Task<PaginationResponseModel<IEnumerable<Entities.Product>>> GetProductsAsync(int page, int pageSize)
         {
             return await _productRepository.GetAllAsync(page, pageSize);
         }
