@@ -28,13 +28,6 @@ Controllers: Contains API controllers responsible for handling HTTP requests and
 Services: Contains business logic and services for performing product-related operations.
 Models: Defines data models and request/response models used by the API.
 Repositories (Optional): If applicable, contains repositories for data access and interaction with the database.
-Contributing
-Contributions to the Simple Product API project are welcome. If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request on GitHub.
 
-License
-The Simple Product API project is licensed under the MIT License. You are free to use, modify, and distribute the code for both personal and commercial purposes. However, attribution to the original project is appreciated.
-
-Contact
-For questions, feedback, or inquiries about the Simple Product API project, please contact projectmaintainer@example.com.
 
 Thank you for using the Simple Product API project! Happy coding!
