@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SimpleProductApi.Data;
+using SimpleProductApi.Middleware;
 using SimpleProductApi.Repository;
-using System;
+using SimpleProductApi.Services.Product;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

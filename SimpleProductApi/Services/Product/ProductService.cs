@@ -1,20 +1,21 @@
 ﻿using SimpleProductApi.Models;
+using SimpleProductApi.Repository;
 using SimpleProductApi.Repository.Product;
 
 namespace SimpleProductApi.Services.Product
 {
     public class ProductService : IProductService
     {
-        private readonly ProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductService(ProductRepository productRepository)
+        public ProductService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
         public async Task<IEnumerable<Entities.Product>> GetProductsAsync(int page, int pageSize)
         {
-            return await _productRepository.GetAllAsync();
+            return await _productRepository.GetAllAsync(page, pageSize);
         }
 
 

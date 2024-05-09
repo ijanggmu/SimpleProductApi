@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimpleProductApi.Data;
+using SimpleProductApi.Entities;
 using System.Linq.Expressions;
 
 namespace SimpleProductApi.Repository
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly ApplicationDbContext _context;
         private readonly DbSet<TEntity> _dbSet;
@@ -18,6 +19,13 @@ namespace SimpleProductApi.Repository
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
+        }
+        public async Task<IEnumerable<TEntity>> GetAllAsync(int page, int pageSize)
+        {
+            return await _dbSet
+                .Skip(page - 1 * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate)
@@ -40,6 +48,7 @@ namespace SimpleProductApi.Repository
         public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
+            entity.ModifiedDate = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return entity;
         }
