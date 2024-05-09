@@ -23,7 +23,7 @@ namespace SimpleProductApi.Repository
         public async Task<IEnumerable<TEntity>> GetAllAsync(int page, int pageSize)
         {
             return await _dbSet
-                .Skip(page - 1 * pageSize)
+                .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
