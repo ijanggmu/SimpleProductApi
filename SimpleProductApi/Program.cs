@@ -4,6 +4,7 @@ using SimpleProductApi.Middleware;
 using SimpleProductApi.Repository;
 using SimpleProductApi.Repository.Product;
 using SimpleProductApi.Services.Product;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
-
+AutoMigration();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
@@ -35,3 +36,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+void AutoMigration()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var data = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        if (data.Database.GetPendingMigrations().Any())
+        {
+            data.Database.MigrateAsync();
+        }
+    }
+}
