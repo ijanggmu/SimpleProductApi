@@ -4,7 +4,6 @@ using SimpleProductApi.Middleware;
 using SimpleProductApi.Repository;
 using SimpleProductApi.Repository.Product;
 using SimpleProductApi.Services.Product;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
 //AutoMigration();

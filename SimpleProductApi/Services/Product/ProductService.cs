@@ -7,22 +7,23 @@ namespace SimpleProductApi.Services.Product
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
+            
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<PaginationResponseModel<IEnumerable<Entities.Product>>> GetProductsAsync(int page, int pageSize)
         {
-            return await _productRepository.GetAllAsync(page, pageSize);
+            return await _unitOfWork.Product.GetAllAsync(page, pageSize);
         }
 
 
         public async Task<Entities.Product> GetProductByIdAsync(int id)
         {
-            return await _productRepository.GetByIdAsync(id);
+            return await _unitOfWork.Product.GetByIdAsync(id);
         }
 
         public async Task<Entities.Product> CreateProductAsync(CreateProductRequestModel requestModel)
@@ -35,24 +36,24 @@ namespace SimpleProductApi.Services.Product
                 Quantity = requestModel.Quantity,
             };
 
-            return await _productRepository.AddAsync(product);
+            return await _unitOfWork.Product.AddAsync(product);
         }
 
         public async Task<Entities.Product> UpdateProductAsync(int id, UpdateProductRequestModel requestModel)
         {
-            var productToUpdate = await _productRepository.GetByIdAsync(id);
+            var productToUpdate = await _unitOfWork.Product.GetByIdAsync(id);
 
             productToUpdate.Name = requestModel.Name;
             productToUpdate.Description = requestModel.Description;
             productToUpdate.Price = requestModel.Price;
             productToUpdate.Quantity = requestModel.Quantity;
 
-            return await _productRepository.UpdateAsync(productToUpdate);
+            return await _unitOfWork.Product.UpdateAsync(productToUpdate);
         }
 
         public async Task<bool> DeleteProductAsync(int id)
         {
-            return await _productRepository.DeleteAsync(id);
+            return await _unitOfWork.Product.DeleteAsync(id);
         }
     }
 }
