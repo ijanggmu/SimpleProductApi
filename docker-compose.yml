@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  mssqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "Admin@123" # Change this to a secure password
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433" # Expose port 1433 for MSSQL Server
+  simpleproductapi:
+    image: ${DOCKER_REGISTRY-}simpleproductapi
+    build:
+      context: .
+      dockerfile: SimpleProductApi/Dockerfile
+    depends_on:
+    - mssqlserver
